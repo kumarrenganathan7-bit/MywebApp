@@ -63,41 +63,54 @@
   <button onclick="logout()">Logout</button>
 </div>
 
-<script>
-  function signup() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    if (user && pass) {
-      localStorage.setItem("username", user);
-      localStorage.setItem("password", pass);
-      alert("Account created successfully!");
-    } else {
-      alert("Please fill all fields");
-    }
-  }
+  const firebaseConfig = {
+    apiKey: "apiKey: "AIzaSyB-Z1hE29BE_Ui55aLVvBW4iDzU05jwupY",
+    authDomain: "teams-portal-8a8ad.firebaseapp.com",
+    projectId: "teams-portal-8a8ad",
+    storageBucket: "teams-portal-8a8ad.firebasestorage.app",
+    messagingSenderId: "723650924156",
+    appId: "1:723650924156:web:7a5dd56e309c49e23803f9"
+  };
 
-  function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    const storedUser = localStorage.getItem("username");
-    const storedPass = localStorage.getItem("password");
+  window.signup = function () {
+    const email = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-    if (user === storedUser && pass === storedPass) {
-      document.getElementById("auth").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-      document.getElementById("userDisplay").innerText = user;
-    } else {
-      alert("Invalid login");
-    }
-  }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => alert("Account created successfully!"))
+      .catch(error => alert(error.message));
+  };
 
-  function logout() {
-    document.getElementById("auth").style.display = "block";
-    document.getElementById("dashboard").style.display = "none";
-  }
+  window.login = function () {
+    const email = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(user => {
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        document.getElementById("userDisplay").innerText = user.user.email;
+      })
+      .catch(error => alert(error.message));
+  };
+
+  window.logout = function () {
+    signOut(auth).then(() => {
+      document.getElementById("auth").style.display = "block";
+      document.getElementById("dashboard").style.display = "none";
+    });
+  };
 </script>
+
+  </script>
 
 </body>
 </html>
