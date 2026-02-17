@@ -3,6 +3,19 @@
 <head>
   <title>Kumar Web App</title>
 <style>
+.container {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+.container.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
   body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #141E30, #243B55);
@@ -145,8 +158,13 @@ from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   const auth = getAuth(app);
   auth.onAuthStateChanged(user => {
   if (user) {
-    document.getElementById("auth").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("auth")document.getElementById("auth").classList.remove("active");
+document.getElementById("dashboard").classList.add("active");
+document.getElementById("userDisplay").innerText = user.email;
+
+    document.getElementById("dashboard")document.getElementById("dashboard").classList.remove("active");
+document.getElementById("auth").classList.add("active");
+
     document.getElementById("userDisplay").innerText = user.email;
   }
 });
