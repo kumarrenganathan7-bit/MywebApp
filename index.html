@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kumar Web App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+    }
+
+    button {
+      padding: 10px;
+      width: 100%;
+      background: #2a5298;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1e3c72;
+    }
+
+    #dashboard {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="auth">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <button onclick="signup()">Sign Up</button>
+</div>
+
+<div class="container" id="dashboard">
+  <h2>Welcome, <span id="userDisplay"></span> 👋</h2>
+  <p>This is your dashboard.</p>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+  function signup() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+
+    if (user && pass) {
+      localStorage.setItem("username", user);
+      localStorage.setItem("password", pass);
+      alert("Account created successfully!");
+    } else {
+      alert("Please fill all fields");
+    }
+  }
+
+  function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+
+    const storedUser = localStorage.getItem("username");
+    const storedPass = localStorage.getItem("password");
+
+    if (user === storedUser && pass === storedPass) {
+      document.getElementById("auth").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      document.getElementById("userDisplay").innerText = user;
+    } else {
+      alert("Invalid login");
+    }
+  }
+
+  function logout() {
+    document.getElementById("auth").style.display = "block";
+    document.getElementById("dashboard").style.display = "none";
+  }
+</script>
+
+</body>
+</html>
