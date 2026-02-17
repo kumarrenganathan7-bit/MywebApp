@@ -2,50 +2,104 @@
 <html>
 <head>
   <title>Kumar Web App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #141E30, #243B55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
 
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
+  .container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 20px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    color: white;
+    animation: fadeIn 0.5s ease-in-out;
+  }
 
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-    }
+  h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
 
-    button {
-      padding: 10px;
-      width: 100%;
-      background: #2a5298;
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
 
-    button:hover {
-      background: #1e3c72;
-    }
+  input:focus {
+    box-shadow: 0 0 5px #00c6ff;
+  }
 
-    #dashboard {
-      display: none;
-    }
-  </style>
+  button {
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  #loginBtn {
+    background: #00c6ff;
+    color: white;
+  }
+
+  #loginBtn:hover {
+    background: #0096c7;
+  }
+
+  #signupBtn {
+    background: #28a745;
+    color: white;
+  }
+
+  #signupBtn:hover {
+    background: #1e7e34;
+  }
+
+  #resetBtn {
+    background: transparent;
+    color: #ccc;
+    font-size: 12px;
+  }
+
+  #resetBtn:hover {
+    color: white;
+  }
+
+  #logoutBtn {
+    background: #dc3545;
+    color: white;
+  }
+
+  #logoutBtn:hover {
+    background: #b02a37;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+</style>
+
 </head>
 <body>
 
