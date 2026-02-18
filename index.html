@@ -2,206 +2,244 @@
 <html>
 <head>
   <title>Kumar Web App</title>
-<style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #141E30, #243B55);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
 
-  .container {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(15px);
-    padding: 40px;
-    border-radius: 20px;
-    width: 350px;
-    text-align: center;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    color: white;
-    animation: fadeIn 0.5s ease-in-out;
-  }
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #141E30, #243B55);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-  h2 {
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
+    .container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(15px);
+      padding: 40px;
+      border-radius: 20px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      color: white;
+    }
 
-  input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-    font-size: 14px;
-  }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
 
-  input:focus {
-    box-shadow: 0 0 5px #00c6ff;
-  }
+    button {
+      padding: 12px;
+      width: 100%;
+      border-radius: 8px;
+      border: none;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-  button {
-    padding: 12px;
-    width: 100%;
-    border-radius: 8px;
-    border: none;
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-  }
+    #loginBtn { background: #00c6ff; color: white; }
+    #signupBtn { background: #28a745; color: white; }
+    #resetBtn { background: transparent; color: #ccc; font-size: 12px; }
+    #logoutBtn { background: #dc3545; color: white; }
+    #uploadBtn { background: #ffc107; }
 
-  #loginBtn {
-    background: #00c6ff;
-    color: white;
-  }
+    #imageList img {
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 10px;
+    }
 
-  #loginBtn:hover {
-    background: #0096c7;
-  }
-
-  #signupBtn {
-    background: #28a745;
-    color: white;
-  }
-
-  #signupBtn:hover {
-    background: #1e7e34;
-  }
-
-  #resetBtn {
-    background: transparent;
-    color: #ccc;
-    font-size: 12px;
-  }
-
-  #resetBtn:hover {
-    color: white;
-  }
-
-  #logoutBtn {
-    background: #dc3545;
-    color: white;
-  }
-
-  #logoutBtn:hover {
-    background: #b02a37;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-</style>
-
+    #dashboard { display: none; }
+  </style>
 </head>
+
 <body>
 
+<!-- AUTH SECTION -->
 <div class="container" id="auth">
   <h2>Login</h2>
-  <input type="text" id="Email Address" placeholder="Email Address">
+  <input type="email" id="email" placeholder="Email Address">
   <input type="password" id="password" placeholder="Password">
   <button id="loginBtn">Login</button>
   <button id="signupBtn">Sign Up</button>
   <button id="resetBtn">Forgot Password</button>
-
 </div>
 
+<!-- DASHBOARD -->
 <div class="container" id="dashboard">
   <h2>Welcome, <span id="userDisplay"></span> 👋</h2>
-  <p>This is your dashboard.</p>
   <button id="logoutBtn">Logout</button>
+
+  <hr>
+
+  <h3>Upload Image</h3>
+  <input type="file" id="imageInput">
+  <button id="uploadBtn">Upload</button>
+
+  <h3>All Images</h3>
+  <div id="imageList"></div>
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail
-} 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  sendPasswordResetEmail,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { 
+  getStorage, 
+  ref, 
+  uploadBytes, 
+  getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyB-Z1hE29BE_Ui55aLVvBW4iDzU05jwupY",
-    authDomain: "teams-portal-8a8ad.firebaseapp.com",
-    projectId: "teams-portal-8a8ad",
-    storageBucket: "teams-portal-8a8ad.firebasestorage.app",
-    messagingSenderId: "723650924156",
-    appId: "1:723650924156:web:7a5dd56e309c49e23803f9"
-  };
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  getDocs 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  auth.onAuthStateChanged(user => {
+
+/* 🔥 YOUR FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_BUCKET",
+  messagingSenderId: "YOUR_ID",
+  appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const storage = getStorage(app);
+const db = getFirestore(app);
+
+
+/* AUTH STATE */
+onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById("auth").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
     document.getElementById("userDisplay").innerText = user.email;
+    loadImages();
+  } else {
+    document.getElementById("auth").style.display = "block";
+    document.getElementById("dashboard").style.display = "none";
   }
 });
 
 
- document.getElementById("signupBtn").addEventListener("click", function () {
-  const email = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+/* SIGN UP */
+document.getElementById("signupBtn").addEventListener("click", () => {
+  const email = emailInput();
+  const password = passwordInput();
 
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => alert("Account created successfully!"))
     .catch(error => alert(error.message));
 });
 
-document.getElementById("loginBtn").addEventListener("click", function () {
-  const email = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+
+/* LOGIN */
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const email = emailInput();
+  const password = passwordInput();
 
   signInWithEmailAndPassword(auth, email, password)
-    .then(user => {
-      document.getElementById("auth").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-      document.getElementById("userDisplay").innerText = user.user.email;
-    })
     .catch(error => alert(error.message));
 });
 
-document.getElementById("logoutBtn").addEventListener("click", function () {
-  signOut(auth).then(() => {
-    document.getElementById("auth").style.display = "block";
-    document.getElementById("dashboard").style.display = "none";
-  });
+
+/* LOGOUT */
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  signOut(auth);
 });
-document.getElementById("resetBtn").addEventListener("click", function () {
-  const email = document.getElementById("username").value;
+
+
+/* RESET PASSWORD */
+document.getElementById("resetBtn").addEventListener("click", () => {
+  const email = emailInput();
 
   if (!email) {
-    alert("Please enter your email first.");
+    alert("Enter your email first.");
     return;
   }
 
   sendPasswordResetEmail(auth, email)
-    .then(() => {
-      alert("Password reset email sent! Check your inbox.");
-    })
-    .catch(error => {
-      alert(error.message);
-    });
+    .then(() => alert("Password reset email sent!"))
+    .catch(error => alert(error.message));
 });
 
 
-</script>
+/* IMAGE UPLOAD */
+document.getElementById("uploadBtn").addEventListener("click", async () => {
+  const file = document.getElementById("imageInput").files[0];
 
-  </script>
+  if (!file) {
+    alert("Select an image first.");
+    return;
+  }
+
+  const storageRef = ref(storage, "images/" + Date.now() + file.name);
+
+  await uploadBytes(storageRef, file);
+  const downloadURL = await getDownloadURL(storageRef);
+
+  await addDoc(collection(db, "images"), {
+    imageUrl: downloadURL,
+    user: auth.currentUser.email
+  });
+
+  alert("Image uploaded!");
+  loadImages();
+});
+
+
+/* LOAD IMAGES */
+async function loadImages() {
+  const snapshot = await getDocs(collection(db, "images"));
+  const imageList = document.getElementById("imageList");
+  imageList.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    imageList.innerHTML += `
+      <div>
+        <p>${data.user}</p>
+        <img src="${data.imageUrl}">
+      </div>
+    `;
+  });
+}
+
+
+/* HELPERS */
+function emailInput() {
+  return document.getElementById("email").value;
+}
+
+function passwordInput() {
+  return document.getElementById("password").value;
+}
+
+</script>
 
 </body>
 </html>
-
