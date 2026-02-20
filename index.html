@@ -6,9 +6,7 @@
 <title>Kumar Web App</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   font-family: 'Segoe UI', sans-serif;
@@ -21,7 +19,7 @@ body {
 }
 
 .container {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.08);
   backdrop-filter: blur(15px);
   padding: 40px;
   border-radius: 20px;
@@ -46,9 +44,7 @@ button {
   transition: 0.3s;
 }
 
-button:hover {
-  opacity: 0.9;
-}
+button:hover { opacity: 0.9; }
 
 #loginBtn { background: #00c6ff; color: white; }
 #signupBtn { background: #28a745; color: white; }
@@ -58,21 +54,9 @@ button:hover {
 
 #dashboard { display: none; }
 
-#imageList img {
-  width: 100%;
-  border-radius: 10px;
-  margin-top: 5px;
-}
-
-.image-card {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.image-card p {
-  font-size: 12px;
-  opacity: 0.8;
-}
+.image-card { margin-bottom: 20px; text-align: left; }
+.image-card p { font-size: 12px; opacity: 0.8; }
+.image-card img { width: 100%; border-radius: 10px; margin-top: 5px; }
 </style>
 </head>
 
@@ -130,12 +114,12 @@ import {
   orderBy 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 YOUR FIREBASE CONFIG */
+/* 🔥 YOUR REAL FIREBASE CONFIG */
 const firebaseConfig = {
-  apiKey: "AIzaSyXXXX",
+  apiKey: "AIzaSyXXXX",  // replace with your real key
   authDomain: "teams-portal-8a8ad.firebaseapp.com",
   projectId: "teams-portal-8a8ad",
-  storageBucket: "teams-portal-8a8ad.appspot.com",  // <-- THIS ONE
+  storageBucket: "teams-portal-8a8ad.appspot.com",
   messagingSenderId: "723650924156",
   appId: "1:723650924156:web:XXXX"
 };
@@ -167,9 +151,10 @@ onAuthStateChanged(auth, user => {
 });
 
 /* SIGN UP */
-document.getElementById("uploadBtn").onclick = () => {
-  alert("Upload button clicked");
-};
+document.getElementById("signupBtn").onclick = async () => {
+  try {
+    await createUserWithEmailAndPassword(auth, emailEl.value, passwordEl.value);
+    alert("Account created!");
   } catch (err) {
     alert(err.message);
   }
@@ -204,7 +189,7 @@ document.getElementById("uploadBtn").onclick = async () => {
   if (!file) return alert("Select an image first.");
 
   const user = auth.currentUser;
-  if (!user) return;
+  if (!user) return alert("User not logged in.");
 
   try {
     const storageRef = ref(storage, `images/${user.uid}_${Date.now()}`);
@@ -254,6 +239,3 @@ function listenForImages() {
 
 </body>
 </html>
-
-
-
