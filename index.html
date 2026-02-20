@@ -167,10 +167,9 @@ onAuthStateChanged(auth, user => {
 });
 
 /* SIGN UP */
-document.getElementById("signupBtn").onclick = async () => {
-  try {
-    await createUserWithEmailAndPassword(auth, emailEl.value, passwordEl.value);
-    alert("Account created!");
+document.getElementById("uploadBtn").onclick = () => {
+  alert("Upload button clicked");
+};
   } catch (err) {
     alert(err.message);
   }
@@ -255,5 +254,6 @@ function listenForImages() {
 
 </body>
 </html>
+
 
 
